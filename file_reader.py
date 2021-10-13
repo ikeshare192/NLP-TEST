@@ -11,5 +11,17 @@ uploaded_file = st.file_uploader(
 
 read_file = pdf.PdfFileReader(uploaded_file)
 page1 = read_file.getPage(0)
-text = page1.extractText()
-#st.write(text)
+raw = page1.extractText()
+
+def whitespace_tokenize(text):
+    """Runs basic whitespace cleaning and splitting on a piece of text."""
+    text = text.strip()
+    if not text:
+        return []
+    tokens = text.split()
+    return tokens
+
+cleaned = whitespace_tokenize(raw)
+joined = " ".join(str(item) for item in cleaned)
+
+st.write(joined)

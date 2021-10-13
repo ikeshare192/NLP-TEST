@@ -26,12 +26,23 @@ page1 = read_file.getPage(0)
 text = page1.extractText()
 
 
-add_text_sidebar = st.sidebar.title("Menu")
-add_text_sidebar = st.sidebar.text("Just some random text.")
+#add_text_sidebar = st.sidebar.title("Menu")
+#add_text_sidebar = st.sidebar.text("Just some random text.")
+
 question = st.text_input(label='Insert a question.')
 #text = st.text_area(label="Context")
 
+def remove_whitespace(text):
+    text = text.strip()
+    if not text:
+        return []
+    tokens = text.split()
+    return tokens
 
-if (not len(text)==0) and not (len(question)==0):
+cleaned = remove_whitespace(text)
+joined = " ".join(str(item) for item in cleaned)
+
+
+if (not len(joined)==0) and not (len(question)==0):
     x_dict = npl_pipe(max_answer_length=50, context=text,question=question)
     st.text(f"Answer: {x_dict['answer']}.")
