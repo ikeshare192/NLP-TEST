@@ -1,13 +1,22 @@
 import streamlit as st
 import PyPDF3 as pdf
-from transformers import pipeline
+from transformers import (
+    AutoTokenizer,
+    AutoModelForTableQuestionAnswering,
+    AutoTokenizer,
+    Pipeline)
 
 st.cache(show_spinner=False)
 
+model_name = "deepset/roberta-base-squad2"
 
-
+#model to be loaded from Huggingface
 def load_model():
-    question_answerer = pipeline('question-answering')
+    question_answerer = pipeline(
+        'question-answering',
+        model=model_name,
+        tokenizer=model_name
+        )
     return question_answerer
 
 npl_pipe = load_model()
@@ -25,12 +34,9 @@ read_file = pdf.PdfFileReader(uploaded_file)
 page1 = read_file.getPage(0)
 text = page1.extractText()
 
-
-#add_text_sidebar = st.sidebar.title("Menu")
-#add_text_sidebar = st.sidebar.text("Just some random text.")
-
 question = st.text_input(label='Insert a question.')
-#text = st.text_area(label="Context")
+#uncomment below to enable viewing of the context
+context = st.text_area(label="Context")
 
 def remove_whitespace(text):
     text = text.strip()
@@ -39,8 +45,8 @@ def remove_whitespace(text):
     tokens = text.split()
     return tokens
 
-cleaned = remove_whitespace(text)
-joined = " ".join(str(item) for item in cleaned)
+#cleaned = remove_whitespace(text)
+#joined = " ".join(str(item) for item in cleaned)
 
 
 if (not len(joined)==0) and not (len(question)==0):
