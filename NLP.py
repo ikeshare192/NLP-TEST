@@ -5,16 +5,30 @@ from transformers import AutoTokenizer, AutoModelForTableQuestionAnswering, Auto
 st.cache(show_spinner=False)
 
 #code to render the streamlit browser page
-st.header("Prototyping NLP Solution")
-st.text("This demo uses a model for Question Answering.")
-uploaded_file = st.file_uploader(
-    "upload pdfs",
-    type='pdf',
-    accept_multiple_files=False
-    )
-question = st.text_input(label='Insert a question.')
+st.header("Prototype NLP Solution for Q&A")
+st.text("This demo uses a NLP model for Question Answering.")
+choose_file_type = st.selectbox(
+    "Choose your file format",
+    [" ",
+    "PDF"]
+)
 
-#model to be loaded from Huggingface
+def main():
+
+    #function called upload file that builds a file uploader and returns the uploaded file
+    def upload_file():
+        uploaded_file = st.file_uploader("upload pdfs", type='pdf', accept_multiple_files=False)
+        return uploaded_file
+
+        question = st.text_input(label='Insert a question.')
+
+    if choose_file_type=="PDF":
+        upload_file()
+
+if __name__=="main":
+    main()
+'''
+#function for loading the model from Huggingface
 def load_model():
     model_name = "deepset/bert-base-cased-squad2"
     question_answerer = pipeline(
@@ -24,13 +38,13 @@ def load_model():
         )
     return question_answerer
 
-#define the model using the load model function
+#defining the model variable
 npl_pipe = load_model()
 
 #read the uploaded pdf file
 read_file = pdf.PdfFileReader(uploaded_file)
 
-#count the number of pages
+#count the number of pages in the pdf
 count = read_file.getNumPages()
 
 #read the text from every page and append it to one list
@@ -56,5 +70,6 @@ cleaned = whitespace_tokenize(final)
 joined = " ".join(str(item) for item in cleaned)
 
 if (not len(joined)==0) and not (len(question)==0):
-    x_dict = npl_pipe(max_answer_length=100, context=joined,question=question)
-    st.text(f"Answer: {x_dict['answer']}.")
+    response = npl_pipe(max_answer_length=100, context=joined,question=question)
+    st.text(f"{response['answer']}.")
+'''  
