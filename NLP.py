@@ -1,7 +1,6 @@
-#from os import read
 import streamlit as st
 import PyPDF3 as pdf
-from transformers import AutoTokenizer, AutoModelForTableQuestionAnswering, AutoTokenizer, pipeline
+from transformers import pipeline
 
 st.cache(show_spinner=False)
 
@@ -49,8 +48,6 @@ def whitespace_tokenize(text):
 def upload_file():
     uploaded_file = st.file_uploader("upload pdfs", type='pdf', accept_multiple_files=False)
     return uploaded_file
-
-
 
 #################
 # main function #
